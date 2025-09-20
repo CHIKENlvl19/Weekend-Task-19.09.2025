@@ -124,12 +124,70 @@ void addBefore(SL_list& list, int index, int value) {
     }
 }
 
-void removeAfter() {
+void removeAfter(SL_list& list, int index) {
+    if(list.head == nullptr)
+    {
+        cerr << "Error, list is empty!" << endl;
+        return;
+    }
 
+    try
+    {
+        Node* current = getNodeByIndex(list, index);
+        if(current == nullptr)
+        {
+            cerr << "Error, cannot delete after the last element!";
+            return;
+        }
+
+        Node* toDelete = current->next;
+        current->next = toDelete->next;
+        delete toDelete;
+
+    } catch (const out_of_range& e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
 }
 
-void removeBefore() {
+void removeBefore(SL_list& list, int index) {
+    if(list.head == nullptr)
+    {
+        cerr << "Error, index is out of range!" << endl;
+        return;
+    }
 
+    if(index == 0)
+    {
+        cerr << "Error, cannot delete the element before first!" << endl;
+        return;
+    }
+
+    if(index == 1)
+    {
+        Node* oldHead = list.head;
+        list.head = list.head->next;
+        delete oldHead;
+    }
+
+    try
+    {
+
+        Node* previous = getNodeByIndex(list, index - 2);
+
+        if (previous == nullptr || previous->next == nullptr) {
+            cerr << "Error: no element to delete before index " << index << endl;
+            return;
+        }
+
+        Node* toDelete = previous->next;
+        previous->next = toDelete->next;
+        delete toDelete;
+    
+    } catch (const out_of_range& e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
 }
 
 void removeHead(SL_list& list) {
@@ -184,6 +242,18 @@ void print(const SL_list& list) {
         }
     }
     cout << " -> nullptr]" << endl;
+}
+
+void print() {
+
+}
+
+void searchByValue() {
+    
+}
+
+void deleteByValue() {
+
 }
 
 int main() {
