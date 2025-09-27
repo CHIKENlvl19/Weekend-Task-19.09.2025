@@ -60,7 +60,7 @@ void print(Stack* stack) {
 
     if(stack->size == 0)
     {
-        cout << "Stack is empty!";
+        cout << "Stack is empty!" << endl;
         return;
     }
 
@@ -68,14 +68,10 @@ void print(Stack* stack) {
     cout << "nullptr";
     while(current != nullptr)
     {
-        cout << " <- " << stack->head->key;
+        cout << " <- " << current->key;
         current = current->next;
     }
     cout << endl;
-}
-
-void clean(Stack* stack) {
-
 }
 
 int main() {
@@ -88,6 +84,11 @@ int main() {
         push(myStack, 10);
         print(myStack);
         pop(myStack);
+        print(myStack);
+        //pop(myStack); // error simulation
+        push(myStack, 10);
+        push(myStack, 20);
+        push(myStack, 30);
         print(myStack);
 
     }
