@@ -209,7 +209,7 @@ void removeTail(SL_list& list) {
         return;
     }
 
-    if(list.head -> next =nullptr)
+    if(list.head -> next == nullptr)
     {
         delete list.head;
         list.head = nullptr;
@@ -244,16 +244,55 @@ void print(const SL_list& list) {
     cout << " -> nullptr]" << endl;
 }
 
-void print() {
-
-}
-
-void searchByValue() {
+int searchByValue(const SL_list& list, int searchKey) {
     
+    if(list.head == nullptr)
+    {
+        throw range_error("Error: list is empty!");
+        return -1;
+    }
+
+    Node* current = list.head;
+    int currentIndex = 0;
+    while(current != nullptr)
+    {
+        if(current->value == searchKey)
+        {
+            return currentIndex;
+        }
+        current = current->next;
+        currentIndex++;
+    }
+
+    return -1;
 }
 
-void deleteByValue() {
+void deleteByValue(SL_list& list, int value) {
+    
+    if(list.head == nullptr)
+    {
+        throw logic_error("Erorr: list is empty, nothing to delete!");
+        return;
+    }
 
+    if(list.head->value == value)
+    {
+        removeHead(list);
+        return;
+    }
+
+    Node* current = list.head;
+    while(current->next != nullptr && current->next->value != value)
+    {
+        current = current->next;
+    }
+
+    if(current->next != nullptr)
+    {
+        Node* toDelete = current->next;
+        current->next = toDelete->next;
+        delete toDelete;
+    }
 }
 
 int main() {
@@ -276,8 +315,20 @@ int main() {
     addBefore(list, 2, 25);         // [10, 20, 25, 30] — перед индексом 2 (перед 30)
 
     print(list); // [10, 20, 25, 30]
+    int searchResult = searchByValue(list, 40);
+    if(searchResult != -1)
+    {
+        cout << "Element is present in the list! It's index is " << searchResult << endl;
+    }
+    else
+    {
+        cout << "Element is abcent." << endl;
+    }
 
-    addBefore(list, 999, 999); // Error: index out of range!
+    deleteByValue(list, 10);
+    print(list);
+
+    //addBefore(list, 999, 999); // Error: index out of range!
 
     return 0;
 }

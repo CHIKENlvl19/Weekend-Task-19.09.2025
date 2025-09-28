@@ -15,9 +15,9 @@ struct Stack {
     int size;
 };
 
-void createStack(Stack* myStack) {
-    myStack->head = nullptr;
-    myStack->size = 0;
+void createStack(Stack& myStack) {
+    myStack.head = nullptr;
+    myStack.size = 0;
 }
 
 Node* createNode(int key) {
@@ -28,43 +28,43 @@ Node* createNode(int key) {
     return newNode;
 }
 
-void push(Stack* myStack, int key) {
+void push(Stack& myStack, int key) {
     
-    if(myStack->size == MAX_STACK_SIZE)
+    if(myStack.size == MAX_STACK_SIZE)
     {
         throw overflow_error("Error: stack is full! Overflow might happen.");
         return;
     }
     
     Node* newNode = createNode(key);
-    newNode->next = myStack->head;
-    myStack->head = newNode;
-    myStack->size += 1;
+    newNode->next = myStack.head;
+    myStack.head = newNode;
+    myStack.size += 1;
 }
 
-void pop(Stack* myStack) {
+void pop(Stack& myStack) {
 
-    if(myStack->size == 0)
+    if(myStack.size == 0)
     {
         throw underflow_error("Error: stack is empty! Nothing to delete.");
         return;
     }
 
-    Node* toDelete = myStack->head;
-    myStack->head = myStack->head->next;
+    Node* toDelete = myStack.head;
+    myStack.head = myStack.head->next;
     delete toDelete;
-    myStack->size -= 1;
+    myStack.size -= 1;
 }
 
-void print(Stack* stack) {
+void print(Stack& stack) {
 
-    if(stack->size == 0)
+    if(stack.size == 0)
     {
         cout << "Stack is empty!" << endl;
         return;
     }
 
-    Node* current = stack->head;
+    Node* current = stack.head;
     cout << "nullptr";
     while(current != nullptr)
     {
@@ -78,7 +78,7 @@ int main() {
 
     try
     {
-        Stack* myStack = new Stack;
+        Stack myStack;
         createStack(myStack);
 
         push(myStack, 10);
