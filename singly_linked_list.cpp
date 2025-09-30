@@ -12,21 +12,24 @@ using namespace std;
 struct Node {
     int value;
     Node* next;
+
+    Node(int v, Node* n = nullptr)
+        : value(v), next(n) {}
 };
 
 struct SL_list {
     Node* head = nullptr;
+
+    ~SL_list() { 
+        //clearList(*this); // можно так, но пока рано
+        while(head != nullptr)
+        {
+            Node* tmp = head;
+            head = head->next;
+            delete tmp;
+        }
+    }
 };
-
-/*void AddNode(Node* ptr,  int key) {
-    Node* newNode = new Node{key, nullptr};
-    newNode -> next = ptr -> next;
-    ptr -> next = newNode;
-}*/
-
-void createSL_list(SL_list& list, int keybegin) {
-    list.head = new Node{keybegin, nullptr};
-}
 
 Node* getNodeByIndex(const SL_list& list, int index) {
     
@@ -112,8 +115,18 @@ void addBefore(SL_list& list, int index, int value) {
     try
     {
         Node* current = getNodeByIndex(list, index);
-        Node* previous = getNodeByIndex(list, index - 1); // можно за один подход, но пока не знаю, как :(
-    
+        Node* previous = nullptr;
+        int currentIndex = 0;
+
+        while(current != nullptr && currentIndex < index)
+        {
+            previous = current;
+            current = current->next;
+            currentIndex++;
+        }
+
+        //Node* previous = getNodeByIndex(list, index - 2); // можно еще так
+
         Node* newNode = new Node{value};
         newNode->next = current;
         previous->next = newNode;
@@ -134,7 +147,7 @@ void removeAfter(SL_list& list, int index) {
     try
     {
         Node* current = getNodeByIndex(list, index);
-        if(current == nullptr)
+        if(current->next == nullptr)
         {
             cerr << "Error, cannot delete after the last element!";
             return;
@@ -161,13 +174,6 @@ void removeBefore(SL_list& list, int index) {
     {
         cerr << "Error, cannot delete the element before first!" << endl;
         return;
-    }
-
-    if(index == 1)
-    {
-        Node* oldHead = list.head;
-        list.head = list.head->next;
-        delete oldHead;
     }
 
     try
@@ -295,6 +301,13 @@ void deleteByValue(SL_list& list, int value) {
     }
 }
 
+void clearList(SL_list& list) {
+    while(list.head != nullptr)
+    {
+        removeHead(list);
+    }
+}
+
 int main() {
 
     SL_list list;
@@ -309,7 +322,8 @@ int main() {
 
     //addBefore(list, 0, 10); // Error: list is empty!
 
-    list.head = new Node{30};       // [30]
+    //list.head = new Node(30);       // [30]
+    addHead(list, 10);
     addBefore(list, 0, 10);         // [10, 30] — через addHead
     addBefore(list, 1, 20);         // [10, 20, 30] — перед индексом 1 (перед 30)
     addBefore(list, 2, 25);         // [10, 20, 25, 30] — перед индексом 2 (перед 30)
@@ -329,6 +343,8 @@ int main() {
     print(list);
 
     //addBefore(list, 999, 999); // Error: index out of range!
+
+    clearList(list); // очистка списка после всех манипуляций
 
     return 0;
 }
