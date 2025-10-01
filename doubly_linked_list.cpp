@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -14,23 +15,34 @@ struct Node {
 struct DL_list {
     Node* head;
     Node* tail;
+    int size;
 
     DL_list() : head(nullptr), tail(nullptr) {}
+
+    ~DL_list() {
+        Node* current = head;
+        while(current != nullptr)
+        {
+            Node* tmp = current;
+            current = current->next;
+            delete tmp;
+        }
+    }
 };
 
-void addHead() {
+void addHead(DL_list& list, int value) {
 
 }
 
-void addTail() {
+void addTail(DL_list& list, int value) {
 
 }
 
-void addAfter() {
+void addAfter(DL_list& list, int value, int index) {
 
 }
 
-void addBefore() {
+void addBefore(DL_list& list, int value, int index) {
 
 }
 

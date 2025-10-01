@@ -9,6 +9,9 @@
 
 using namespace std;
 
+struct SL_list;
+void addTail(SL_list& list, int value);
+
 struct Node {
     int value;
     Node* next;
@@ -19,8 +22,38 @@ struct Node {
 
 struct SL_list {
     Node* head = nullptr;
+    int size = 0;
 
-    ~SL_list() { 
+    SL_list() = default;
+
+    SL_list(const SL_list& other) : head(nullptr), size(0) {
+        Node* current = other.head;
+        while(current != nullptr)
+        {
+            addTail(*this, current->value);
+            current = current->next;
+        }
+    }
+
+    SL_list& operator=(const SL_list& other) {
+        if(this == &other)
+        {
+            return *this;
+        }
+
+        clear();
+
+        Node* current = other.head;
+        while(current != nullptr)
+        {
+            addTail(*this, current->value);
+            current = current->next;
+        }
+
+        return *this;
+    }
+
+    void clear() {
         //clearList(*this); // можно так, но пока рано
         while(head != nullptr)
         {
@@ -28,6 +61,11 @@ struct SL_list {
             head = head->next;
             delete tmp;
         }
+        size = 0;
+    }
+
+    ~SL_list() { 
+        clear();
     }
 };
 
@@ -57,6 +95,7 @@ Node* getNodeByIndex(const SL_list& list, int index) {
 
 void addHead(SL_list& list, int value) {
     list.head = new Node{value, list.head};
+    list.size++;
 }
 
 void addTail(SL_list& list, int value) {
@@ -65,6 +104,7 @@ void addTail(SL_list& list, int value) {
     if(list.head == nullptr)
     {
         list.head = newNode;
+        list.size++;
         return;
     }
 
@@ -75,24 +115,26 @@ void addTail(SL_list& list, int value) {
     }
 
     current -> next = newNode;
+    list.size++;
 }
 
 void addAfter(SL_list& list, int index, int value) {
 
     if(list.head == nullptr)
     {
-        cout << "Error, list is empty!" << endl;
+        cerr << "Error, list is empty!" << endl;
+        return;
     }
     
     try
     {
         Node* current = getNodeByIndex(list, index);
-
-        Node* newNode = new Node{value};
+        Node* newNode = new Node(value);
         newNode -> next = current -> next;
         current -> next = newNode;
-
-    } catch (out_of_range& e)
+        list.size++;
+    } 
+    catch (out_of_range& e)
     {
         cerr << "Error: " << e.what() << endl;
     }
@@ -130,6 +172,7 @@ void addBefore(SL_list& list, int index, int value) {
         Node* newNode = new Node{value};
         newNode->next = current;
         previous->next = newNode;
+        list.size++;
     }
     catch(const out_of_range& e)
     {
@@ -157,39 +200,7 @@ void removeAfter(SL_list& list, int index) {
         current->next = toDelete->next;
         delete toDelete;
 
-    } catch (const out_of_range& e)
-    {
-        cerr << "Error: " << e.what() << endl;
-    }
-}
-
-void removeBefore(SL_list& list, int index) {
-    if(list.head == nullptr)
-    {
-        cerr << "Error, index is out of range!" << endl;
-        return;
-    }
-
-    if(index == 0)
-    {
-        cerr << "Error, cannot delete the element before first!" << endl;
-        return;
-    }
-
-    try
-    {
-
-        Node* previous = getNodeByIndex(list, index - 2);
-
-        if (previous == nullptr || previous->next == nullptr) {
-            cerr << "Error: no element to delete before index " << index << endl;
-            return;
-        }
-
-        Node* toDelete = previous->next;
-        previous->next = toDelete->next;
-        delete toDelete;
-    
+        list.size--;
     } catch (const out_of_range& e)
     {
         cerr << "Error: " << e.what() << endl;
@@ -206,6 +217,46 @@ void removeHead(SL_list& list) {
     Node* oldHead = list.head;
     list.head = list.head -> next;
     delete oldHead;
+
+    list.size--;
+}
+
+void removeBefore(SL_list& list, int index) {
+    if(list.head == nullptr)
+    {
+        cerr << "Error, index is out of range!" << endl;
+        return;
+    }
+
+    if(index == 0)
+    {
+        cerr << "Error, cannot delete the element before first!" << endl;
+        return;
+    }
+
+    if(index == 1)
+    {
+        removeHead(list);
+    }
+
+    try
+    {
+
+        Node* previous = getNodeByIndex(list, index - 2);
+        Node* toDelete = previous->next;
+        if (toDelete == nullptr) {
+            cerr << "Error: no element to delete before index " << index << endl;
+            return;
+        }
+
+        previous->next = toDelete->next;
+        delete toDelete;
+        list.size--;
+    
+    } catch (const out_of_range& e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
 }
 
 void removeTail(SL_list& list) {
@@ -231,6 +282,8 @@ void removeTail(SL_list& list) {
     Node* tail = current -> next;
     current -> next = nullptr;
     delete tail;
+
+    list.size--;
 }
 
 void print(const SL_list& list) {
@@ -298,13 +351,7 @@ void deleteByValue(SL_list& list, int value) {
         Node* toDelete = current->next;
         current->next = toDelete->next;
         delete toDelete;
-    }
-}
-
-void clearList(SL_list& list) {
-    while(list.head != nullptr)
-    {
-        removeHead(list);
+        list.size--;
     }
 }
 
@@ -344,7 +391,16 @@ int main() {
 
     //addBefore(list, 999, 999); // Error: index out of range!
 
-    clearList(list); // очистка списка после всех манипуляций
+    cout << "Estimated list size is " << list.size << " elements." << endl;
+
+    SL_list list2 = list;
+    print(list2);
+
+    SL_list list3;
+    list3 = list;
+    print(list3);
+
+    // при помощи деструктора список сам очистится при выходе из области видимости
 
     return 0;
 }
