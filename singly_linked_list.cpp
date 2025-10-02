@@ -54,13 +54,13 @@ struct SL_list {
     }
 
     void clear() {
-        //clearList(*this); // можно так, но пока рано
         while(head != nullptr)
         {
             Node* tmp = head;
             head = head->next;
             delete tmp;
         }
+        head = nullptr;
         size = 0;
     }
 
