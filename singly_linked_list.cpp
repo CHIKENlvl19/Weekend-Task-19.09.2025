@@ -10,13 +10,13 @@
 using namespace std;
 
 struct SL_list;
-void addTail(SL_list& list, int value);
+void addTail(SL_list& list, string value);
 
 struct Node {
-    int value;
+    string value;
     Node* next;
 
-    Node(int v, Node* n = nullptr)
+    Node(string v, Node* n = nullptr)
         : value(v), next(n) {}
 };
 
@@ -93,13 +93,13 @@ Node* getNodeByIndex(const SL_list& list, int index) {
     return current;
 }
 
-void addHead(SL_list& list, int value) {
-    list.head = new Node{value, list.head};
+void addHead(SL_list& list, string value) {
+    list.head = new Node(value, list.head);
     list.size++;
 }
 
-void addTail(SL_list& list, int value) {
-    Node* newNode = new Node{value};
+void addTail(SL_list& list, string value) {
+    Node* newNode = new Node(value);
 
     if(list.head == nullptr)
     {
@@ -118,7 +118,7 @@ void addTail(SL_list& list, int value) {
     list.size++;
 }
 
-void addAfter(SL_list& list, int index, int value) {
+void addAfter(SL_list& list, int index, string value) {
 
     if(list.head == nullptr)
     {
@@ -140,11 +140,17 @@ void addAfter(SL_list& list, int index, int value) {
     }
 }
 
-void addBefore(SL_list& list, int index, int value) {
+void addBefore(SL_list& list, int index, string value) {
 
     if(list.head == nullptr)
     {
         cerr << "Error, list is empty!" << endl;
+        return;
+    }
+
+    if(index < 0)
+    {
+        cerr << "Error, negative index!" << endl;
         return;
     }
 
@@ -154,30 +160,27 @@ void addBefore(SL_list& list, int index, int value) {
         return;
     }
 
-    try
+    
+    Node* current = list.head;
+    Node* previous = nullptr;
+    int currentIndex = 0;
+
+    while(current != nullptr && currentIndex < index)
     {
-        Node* current = getNodeByIndex(list, index);
-        Node* previous = nullptr;
-        int currentIndex = 0;
-
-        while(current != nullptr && currentIndex < index)
-        {
-            previous = current;
-            current = current->next;
-            currentIndex++;
-        }
-
-        //Node* previous = getNodeByIndex(list, index - 2); // можно еще так
-
-        Node* newNode = new Node{value};
-        newNode->next = current;
-        previous->next = newNode;
-        list.size++;
+        previous = current;
+        current = current->next;
+        currentIndex++;
     }
-    catch(const out_of_range& e)
+
+    if(currentIndex != index)
     {
-        cerr << e.what() << endl;
+        cerr << "Error, index out of range!" << endl;
+        return;
     }
+
+    Node* newNode = new Node(value, current);
+    previous->next = newNode;
+    list.size++;
 }
 
 void removeAfter(SL_list& list, int index) {
@@ -270,6 +273,7 @@ void removeTail(SL_list& list) {
     {
         delete list.head;
         list.head = nullptr;
+        list.size--;
         return;
     }
 
@@ -303,12 +307,11 @@ void print(const SL_list& list) {
     cout << " -> nullptr]" << endl;
 }
 
-int searchByValue(const SL_list& list, int searchKey) {
+int searchByValue(const SL_list& list, string searchKey) {
     
     if(list.head == nullptr)
     {
         throw range_error("Error: list is empty!");
-        return -1;
     }
 
     Node* current = list.head;
@@ -326,12 +329,11 @@ int searchByValue(const SL_list& list, int searchKey) {
     return -1;
 }
 
-void deleteByValue(SL_list& list, int value) {
+void deleteByValue(SL_list& list, string value) {
     
     if(list.head == nullptr)
     {
         throw logic_error("Erorr: list is empty, nothing to delete!");
-        return;
     }
 
     if(list.head->value == value)
@@ -356,51 +358,59 @@ void deleteByValue(SL_list& list, int value) {
 }
 
 int main() {
-
     SL_list list;
-    /*createSL_list(list, 10);
 
-    addHead(list, 20);
-    addTail(list, 30);
+    cout << "=== ТЕСТ 1: добавление элементов ===" << endl;
+    addHead(list, "one");       // [one]
+    print(list);
+    addTail(list, "two");
+    print(list);                // [one -> two]
+    addBefore(list, 1, "zero");
+    print(list);                // [one -> zero -> two]
+    addAfter(list, 1, "three");
+    print(list);                // [one -> zero -> three -> two]
+    print(list);
+    cout << "Размер: " << list.size << endl;
+
+    cout << "\n=== ТЕСТ 2: удаление элементов ===" << endl;
+    removeHead(list);           // удаляем "one"
+    print(list);
+    removeTail(list);           // удаляем "two"
+    print(list);
+    removeAfter(list, 0);       // удаляем после "zero" (удалится "three")
+    print(list);
+    cout << "Размер: " << list.size << endl;
+
+    cout << "\n=== ТЕСТ 3: добавление снова ===" << endl;
+    addHead(list, "alpha");
+    addTail(list, "beta");
+    addTail(list, "gamma");
+    print(list);
+    cout << "Размер: " << list.size << endl;
+
+    cout << "\n=== ТЕСТ 4: поиск и удаление по значению ===" << endl;
+    int pos = searchByValue(list, "beta");
+    cout << "beta найден на позиции: " << pos << endl;
+    deleteByValue(list, "beta");
+    print(list);
+    deleteByValue(list, "not_found"); // ничего не удалит
     print(list);
 
-    removeHead(list);
-    print(list);*/
+    cout << "\n=== ТЕСТ 5: копирование ===" << endl;
+    SL_list copy1 = list;   // копирующий конструктор
+    cout << "Копия 1: ";
+    print(copy1);
 
-    //addBefore(list, 0, 10); // Error: list is empty!
+    SL_list copy2;
+    copy2 = list;           // оператор присваивания
+    cout << "Копия 2: ";
+    print(copy2);
 
-    //list.head = new Node(30);       // [30]
-    addHead(list, 10);
-    addBefore(list, 0, 10);         // [10, 30] — через addHead
-    addBefore(list, 1, 20);         // [10, 20, 30] — перед индексом 1 (перед 30)
-    addBefore(list, 2, 25);         // [10, 20, 25, 30] — перед индексом 2 (перед 30)
-
-    print(list); // [10, 20, 25, 30]
-    int searchResult = searchByValue(list, 40);
-    if(searchResult != -1)
-    {
-        cout << "Element is present in the list! It's index is " << searchResult << endl;
-    }
-    else
-    {
-        cout << "Element is abcent." << endl;
-    }
-
-    deleteByValue(list, 10);
+    cout << "\n=== ТЕСТ 6: очистка ===" << endl;
+    list.clear();
+    cout << "После очистки: ";
     print(list);
-
-    //addBefore(list, 999, 999); // Error: index out of range!
-
-    cout << "Estimated list size is " << list.size << " elements." << endl;
-
-    SL_list list2 = list;
-    print(list2);
-
-    SL_list list3;
-    list3 = list;
-    print(list3);
-
-    // при помощи деструктора список сам очистится при выходе из области видимости
+    cout << "Размер: " << list.size << endl;
 
     return 0;
 }
