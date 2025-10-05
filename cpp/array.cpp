@@ -97,6 +97,7 @@ void Delete(myArray& arr, int index) {
 }
 
 void swapElements(myArray& arr, int index, int value) {
+    
     if(index < 0 || index > arr.size)
     {
         throw out_of_range("Error: swapping an element failed due to invalid index.");
@@ -105,7 +106,7 @@ void swapElements(myArray& arr, int index, int value) {
     arr.data[index] = value;
 }
 
-int size(myArray& arr) {
+int size(const myArray& arr) {
     return arr.size;
 }
 
