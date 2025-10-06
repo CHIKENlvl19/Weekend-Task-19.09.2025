@@ -297,7 +297,7 @@ void print(const SL_list& list) {
     cout << "[";
     while(head != nullptr)
     {
-        cout << head -> value;
+        cout << head -> value << " (" << &(head->value) << ") ";
         head = head -> next;
         if(head != nullptr)
         {

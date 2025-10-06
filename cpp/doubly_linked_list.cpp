@@ -38,34 +38,34 @@ struct DL_list {
 };
 
 void addHead(DL_list& list, string value) {
-    Node* newNode = new Node(value, list.head, nullptr);
+    Node* newHead = new Node(value, list.head, nullptr);
 
     if(list.head != nullptr)
     {
-        list.head->previous = newNode;
+        list.head->previous = newHead;
     }
     else 
     {
-        list.tail = newNode;
+        list.tail = newHead;
     }
 
-    list.head = newNode;
+    list.head = newHead;
     list.size++;
 }
 
 void addTail(DL_list& list, string value) {
-    Node* newNode = new Node(value, nullptr, list.tail);
+    Node* newTail = new Node(value, nullptr, list.tail);
 
     if(list.tail != nullptr)
     {
-        list.tail->next = newNode;
+        list.tail->next = newTail;
     }
     else
     {
-        list.head = newNode;
+        list.head = newTail;
     }
 
-    list.tail = newNode;
+    list.tail = newTail;
     list.size++;
 }
 
@@ -81,7 +81,8 @@ Node* getNodeByIndex(const DL_list& list, int index) {
 }
 
 void addAfter(DL_list& list, int index, string value) {
-    if(index < 0 || index >= list.size) {
+    if(index < 0 || index >= list.size) 
+    {
         cerr << "Error: index out of range in addAfter\n";
         return;
     }
@@ -89,10 +90,12 @@ void addAfter(DL_list& list, int index, string value) {
     Node* current = getNodeByIndex(list, index);
     Node* newNode = new Node(value, current->next, current);
 
-    if(current->next != nullptr) {
+    if(current->next != nullptr) 
+    {
         current->next->previous = newNode;
     }
-    else {
+    else 
+    {
         list.tail = newNode;
     }
 
@@ -123,26 +126,32 @@ void addBefore(DL_list& list, int index, string value) {
 void removeByValue(DL_list& list, string value) {
     Node* current = list.head;
 
-    while(current != nullptr && current->value != value) {
+    while(current != nullptr && current->value != value) 
+    {
         current = current->next;
     }
 
-    if(current == nullptr) {
+    if(current == nullptr) 
+    {
         cerr << "Value not found\n";
         return;
     }
 
-    if(current->previous != nullptr) {
+    if(current->previous != nullptr) 
+    {
         current->previous->next = current->next;
     }
-    else {
+    else 
+    {
         list.head = current->next;
     }
 
-    if(current->next != nullptr) {
+    if(current->next != nullptr) 
+    {
         current->next->previous = current->previous;
     }
-    else {
+    else 
+    {
         list.tail = current->previous;
     }
 
@@ -166,12 +175,31 @@ int searchByValue(const DL_list& list, string value) {
 void print(const DL_list& list) {
     cout << "[";
     Node* current = list.head;
-    while(current != nullptr) {
-        cout << current->value;
-        if(current->next) cout << " <-> ";
+    while(current != nullptr) 
+    {
+        cout << current->value << "(" << &(current->value) << ")";
+        if(current->next)
+        {
+            cout << " <-> ";
+        }
         current = current->next;
     }
-    cout << "]\n";
+    cout << "]" << endl;
+}
+
+void backwardsPrint(const DL_list& list) {
+    cout << "[";
+    Node* current = list.tail;
+    while(current != nullptr)
+    {
+        cout << current->value;
+        if(current->previous)
+        {
+            cout << " <-> ";
+        }
+        current = current->previous;
+    }
+    cout << "]" << endl;
 }
 
 int main() {
@@ -196,5 +224,8 @@ int main() {
     removeByValue(list, "zero"); // удалить "zero"
     print(list);
 
-    return 0;
+    cout << endl;
+    backwardsPrint(list);
+
+    return 0;   
 }
