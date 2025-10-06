@@ -41,7 +41,7 @@ struct SL_list {
             return *this;
         }
 
-        clear();
+        clean();
 
         Node* current = other.head;
         while(current != nullptr)
@@ -53,7 +53,7 @@ struct SL_list {
         return *this;
     }
 
-    void clear() {
+    void clean() {
         while(head != nullptr)
         {
             Node* tmp = head;
@@ -65,7 +65,7 @@ struct SL_list {
     }
 
     ~SL_list() { 
-        clear();
+        clean();
     }
 };
 
@@ -407,7 +407,7 @@ int main() {
     print(copy2);
 
     cout << "\n=== ТЕСТ 6: очистка ===" << endl;
-    list.clear();
+    list.clean();
     cout << "После очистки: ";
     print(list);
     cout << "Размер: " << list.size << endl;

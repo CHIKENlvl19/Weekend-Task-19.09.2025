@@ -8,9 +8,23 @@
 using namespace std;
 
 struct myArray {
-    int* data;
+    string* data;
     int size;
     int capacity;
+
+    myArray(string* d = nullptr, int s = 0, int c = 4)
+        : data(d), size(s), capacity(c) {}
+
+    void clean() {
+        delete[] data;
+        data = nullptr;
+        size = 0;
+        capacity = 0;
+    }
+
+    ~myArray() {
+        clean();
+    }
 };
 
 void createArray(myArray& arr, int initialCapacity = 4) {
@@ -19,16 +33,16 @@ void createArray(myArray& arr, int initialCapacity = 4) {
         initialCapacity = 4;
     }
 
-    arr.data = new int[initialCapacity];
+    arr.data = new string[initialCapacity];
     arr.size = 0;
     arr.capacity = initialCapacity;
 }
 
-void push_back(myArray& arr, int value) {
+void push_back(myArray& arr, string value) {
     if(arr.size >= arr.capacity)
     {
         int newCapacity = arr.capacity * 2;
-        int* newData = new int[newCapacity];
+        string* newData = new string[newCapacity];
 
         for(int i = 0; i < arr.size; i++)
         {
@@ -44,7 +58,7 @@ void push_back(myArray& arr, int value) {
     arr.size++;
 }
 
-void insert(myArray& arr, int index, int value) {
+void insert(myArray& arr, int index, string value) {
     if (index < 0 || index > arr.size)
     {
         throw out_of_range("Error: inserting failed due to invalid index.");
@@ -52,7 +66,7 @@ void insert(myArray& arr, int index, int value) {
 
     if(arr.size >= arr.capacity) {
         int newCapacity = arr.capacity * 2;
-        int* newData = new int[newCapacity];
+        string* newData = new string[newCapacity];
         
         for(int i = 0; i < arr.size; i++)
         {
@@ -73,7 +87,7 @@ void insert(myArray& arr, int index, int value) {
     arr.size++;
 }
 
-int getElement(const myArray& arr, int index) {
+string getElement(const myArray& arr, int index) {
     if(index < 0 || index > arr.size)
     {
         throw out_of_range("Error: getting an element failed due to invalid index.");
@@ -96,7 +110,7 @@ void Delete(myArray& arr, int index) {
     arr.size--;
 }
 
-void swapElements(myArray& arr, int index, int value) {
+void swapElements(myArray& arr, int index, string value) {
     
     if(index < 0 || index > arr.size)
     {
@@ -124,35 +138,34 @@ void print(const myArray& arr) {
     cout << "]" << endl;
 }
 
-void clean(myArray& arr) {
-    delete[] arr.data;
-    arr.data = nullptr;
-    arr.size = 0;
-    arr.capacity = 0;
-}
-
 int main() {
-    myArray arr;
-    createArray(arr);
 
-    push_back(arr, 10);
-    push_back(arr, 20);
-    print(arr);
+    try {
+        myArray arr;
+        createArray(arr);
 
-    insert(arr, 1,  15);
-    print(arr);
+        push_back(arr, "ten");
+        push_back(arr, "20");
+        print(arr);
 
-    cout << "Elemnt [1]: " << getElement(arr, 1) << endl;
+        insert(arr, 1,  "15");
+        print(arr);
 
-    swapElements(arr, 0, 5);
-    print(arr);
+        cout << "Elemnt [1]: " << getElement(arr, 1) << endl;
 
-    Delete(arr, 0);
-    print(arr);
+        swapElements(arr, 0, "5");
+        print(arr);
 
-    cout << "Massive length: " << size(arr);
+        Delete(arr, 0);
+        print(arr);
 
-    clean(arr);
+        cout << "Massive length: " << size(arr);
 
+    }
+    catch (const exception& e) {
+        cout << e.what() << endl;
+    }
+
+    
     return 0;
 }

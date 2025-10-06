@@ -104,18 +104,21 @@ void addAfter(DL_list& list, int index, string value) {
 }
 
 void addBefore(DL_list& list, int index, string value) {
-    if(index < 0 || index >= list.size) {
-        cerr << "Error: index out of range in addBefore\n";
+    if(index < 0 || index >= list.size) 
+    {
+        cerr << "Error: index out of range in addBefore" << endl;
         return;
     }
 
     Node* current = getNodeByIndex(list, index);
     Node* newNode = new Node(value, current, current->previous);
 
-    if(current->previous != nullptr) {
+    if(current->previous != nullptr) 
+    {
         current->previous->next = newNode;
     }
-    else {
+    else 
+    {
         list.head = newNode;
     }
 
@@ -162,8 +165,10 @@ void removeByValue(DL_list& list, string value) {
 int searchByValue(const DL_list& list, string value) {
     Node* current = list.head;
     int index = 0;
-    while(current != nullptr) {
-        if(current->value == value) {
+    while(current != nullptr) 
+    {
+        if(current->value == value) 
+        {
             return index;
         }
         current = current->next;
