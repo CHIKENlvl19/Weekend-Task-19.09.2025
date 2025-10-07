@@ -6,7 +6,7 @@ using namespace std;
 const int MAX_STACK_SIZE = 1000;
 
 struct Stack;
-void push(Stack& myStack, string value);
+void push(Stack& myStack, const string& value);
 
 struct Node {
     string value;
@@ -71,7 +71,7 @@ Node* createNode(string value) {
     return newNode;
 }
 
-void push(Stack& myStack, string value) {
+void push(Stack& myStack, const string& value) {
     
     if(myStack.size == MAX_STACK_SIZE)
     {

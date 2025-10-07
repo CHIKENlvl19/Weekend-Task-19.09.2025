@@ -10,7 +10,7 @@
 using namespace std;
 
 struct SL_list;
-void addTail(SL_list& list, string value);
+void addTail(SL_list& list, const string& value);
 
 struct Node {
     string value;
@@ -93,12 +93,12 @@ Node* getNodeByIndex(const SL_list& list, int index) {
     return current;
 }
 
-void addHead(SL_list& list, string value) {
+void addHead(SL_list& list, const string& value) {
     list.head = new Node(value, list.head);
     list.size++;
 }
 
-void addTail(SL_list& list, string value) {
+void addTail(SL_list& list, const string& value) {
     Node* newNode = new Node(value);
 
     if(list.head == nullptr)
@@ -118,7 +118,7 @@ void addTail(SL_list& list, string value) {
     list.size++;
 }
 
-void addAfter(SL_list& list, int index, string value) {
+void addAfter(SL_list& list, int index, const string& value) {
 
     if(list.head == nullptr)
     {
@@ -140,7 +140,7 @@ void addAfter(SL_list& list, int index, string value) {
     }
 }
 
-void addBefore(SL_list& list, int index, string value) {
+void addBefore(SL_list& list, int index, const string& value) {
 
     if(list.head == nullptr)
     {
@@ -307,7 +307,7 @@ void print(const SL_list& list) {
     cout << " -> nullptr]" << endl;
 }
 
-int searchByValue(const SL_list& list, string searchKey) {
+int searchByValue(const SL_list& list, const string& searchKey) {
     
     if(list.head == nullptr)
     {
@@ -329,7 +329,7 @@ int searchByValue(const SL_list& list, string searchKey) {
     return -1;
 }
 
-void deleteByValue(SL_list& list, string value) {
+void deleteByValue(SL_list& list, const string& value) {
     
     if(list.head == nullptr)
     {

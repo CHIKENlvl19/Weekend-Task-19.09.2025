@@ -12,8 +12,51 @@ struct myArray {
     int size;
     int capacity;
 
-    myArray(string* d = nullptr, int s = 0, int c = 4)
-        : data(d), size(s), capacity(c) {}
+    myArray(int initialCapacity = 4) // конструктор
+        : data(nullptr), size(0), capacity(4) 
+    {
+        if(initialCapacity <= 0)
+        {
+            initialCapacity = 4;
+        }
+        data = new string[initialCapacity];
+        capacity = initialCapacity;
+    }
+
+    myArray(const myArray& other) // копирующий конструктор
+        : data(nullptr), size(other.size), capacity(other.capacity)
+    {
+        for(int i = 0; i < size; i++)
+        {
+            data[i] = other.data[i];
+        }
+    }
+
+    myArray& operator=(const myArray& other) { // копирующий опеатор присваивания
+        if(this == &other)
+        {
+            return *this;
+        }
+
+        string* newData = nullptr;
+        if(other.capacity > 0)
+        {
+            newData = new string[other.capacity];
+            for(int i = 0; i < other.size; i++)
+            {
+                newData[i] = other.data[i];
+            }
+
+            delete[] data;
+            data = newData;
+            size = other.size;
+            capacity = other.capacity;
+
+            return *this;
+        }
+
+
+    }
 
     void clean() {
         delete[] data;
@@ -26,17 +69,6 @@ struct myArray {
         clean();
     }
 };
-
-void createArray(myArray& arr, int initialCapacity = 4) {
-    if(initialCapacity <= 0)
-    {
-        initialCapacity = 4;
-    }
-
-    arr.data = new string[initialCapacity];
-    arr.size = 0;
-    arr.capacity = initialCapacity;
-}
 
 void push_back(myArray& arr, string value) {
     if(arr.size >= arr.capacity)
@@ -142,7 +174,6 @@ int main() {
 
     try {
         myArray arr;
-        createArray(arr);
 
         push_back(arr, "ten");
         push_back(arr, "20");

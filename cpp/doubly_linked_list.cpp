@@ -37,7 +37,7 @@ struct DL_list {
     }
 };
 
-void addHead(DL_list& list, string value) {
+void addHead(DL_list& list, const string& value) {
     Node* newHead = new Node(value, list.head, nullptr);
 
     if(list.head != nullptr)
@@ -53,7 +53,7 @@ void addHead(DL_list& list, string value) {
     list.size++;
 }
 
-void addTail(DL_list& list, string value) {
+void addTail(DL_list& list, const string& value) {
     Node* newTail = new Node(value, nullptr, list.tail);
 
     if(list.tail != nullptr)
@@ -80,7 +80,7 @@ Node* getNodeByIndex(const DL_list& list, int index) {
     return current;
 }
 
-void addAfter(DL_list& list, int index, string value) {
+void addAfter(DL_list& list, int index, const string& value) {
     if(index < 0 || index >= list.size) 
     {
         cerr << "Error: index out of range in addAfter\n";
@@ -103,7 +103,7 @@ void addAfter(DL_list& list, int index, string value) {
     list.size++;
 }
 
-void addBefore(DL_list& list, int index, string value) {
+void addBefore(DL_list& list, int index, const string& value) {
     if(index < 0 || index >= list.size) 
     {
         cerr << "Error: index out of range in addBefore" << endl;
@@ -126,7 +126,7 @@ void addBefore(DL_list& list, int index, string value) {
     list.size++;
 }
 
-void removeByValue(DL_list& list, string value) {
+void removeByValue(DL_list& list, const string& value) {
     Node* current = list.head;
 
     while(current != nullptr && current->value != value) 
@@ -162,7 +162,7 @@ void removeByValue(DL_list& list, string value) {
     list.size--;
 }
 
-int searchByValue(const DL_list& list, string value) {
+int searchByValue(const DL_list& list, const string& value) {
     Node* current = list.head;
     int index = 0;
     while(current != nullptr) 

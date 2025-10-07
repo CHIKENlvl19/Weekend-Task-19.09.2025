@@ -36,7 +36,7 @@ struct myQueue {
     }
 };
 
-void push(myQueue& queue, const string value) {
+void push(myQueue& queue, const string& value) {
     if(queue.size == queue.capacity)
     {
         int newCapacity = queue.capacity * 2;
